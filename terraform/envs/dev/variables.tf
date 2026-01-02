@@ -27,3 +27,39 @@ variable "az_count" {
   type        = number
   default     = 2
 }
+
+variable "kubernetes_version" {
+  description = "EKS Kubernetes version."
+  type        = string
+  default     = "1.29"
+}
+
+variable "node_instance_types" {
+  description = "EC2 instance types for the node group."
+  type        = list(string)
+  default     = ["t3.medium"]
+}
+
+variable "node_desired_size" {
+  description = "Desired node count."
+  type        = number
+  default     = 1
+}
+
+variable "node_min_size" {
+  description = "Min node count."
+  type        = number
+  default     = 1
+}
+
+variable "node_max_size" {
+  description = "Max node count."
+  type        = number
+  default     = 2
+}
+
+variable "node_disk_size" {
+  description = "Node disk size in GiB."
+  type        = number
+  default     = 20
+}
