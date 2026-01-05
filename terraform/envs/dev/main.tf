@@ -46,3 +46,13 @@ output "eks_cluster_name" {
 output "eks_oidc_issuer_url" {
   value = module.eks.oidc_issuer_url
 }
+output "hello_ecr_repository_url" {
+  value = module.ecr_hello.repository_url
+}
+
+module "ecr_hello" {
+  source = "../../modules/ecr"
+
+  project_name = var.project_name
+  repo_name    = "${var.project_name}/hello"
+}
