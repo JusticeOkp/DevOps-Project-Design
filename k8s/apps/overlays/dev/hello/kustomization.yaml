@@ -1,3 +1,9 @@
 resources:
   - ../../../base/hello
 namespace: dev
+
+images:
+  - name: nginx
+    newName: 692167434250.dkr.ecr.us-east-1.amazonaws.com/devops-project-design/hello
+    newTag: 2229cd661e34c26bca8176d5b01da48aa9eca62c
+
