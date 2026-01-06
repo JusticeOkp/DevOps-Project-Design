@@ -1,43 +1,79 @@
-# DevOps-Project-Design
+# DevOps Project Design
 
-Hands-on DevOps project focused on building a production-style AWS platform using Terraform, Kubernetes (EKS), GitOps, CI/CD, and basic operational practices.
+A production-style DevOps platform built on AWS using Terraform, EKS, GitHub Actions, and Argo CD.  
+This project demonstrates real-world infrastructure automation, CI/CD pipelines, and GitOps workflows.
 
-## Status
+---
 
-- Phase 0: Repository scaffolding and standards — Completed
-- Phase 1: Terraform foundation — In progress
-  - Terraform bootstrap (S3 remote state + DynamoDB locking) — Completed
-  - Dev environment backend configuration — Completed
-  - VPC foundation (public/private subnets, single NAT gateway) — Completed
+## Overview
 
-## Phase 1 – VPC Foundation (Dev)
+This repository showcases a complete DevOps workflow:
 
-The dev environment network was provisioned using Terraform with a simple, production-oriented design:
+- Infrastructure provisioned with Terraform
+- Containerized application built and pushed via GitHub Actions
+- Secure AWS authentication using GitHub OIDC (no static credentials)
+- GitOps-based deployment to Kubernetes using Argo CD
 
-- One VPC across two availability zones
-- Public and private subnets per AZ
-- Internet Gateway for public subnets
-- Single NAT Gateway for private subnet egress
-- Subnets tagged for future EKS usage
+The focus is on clarity, correctness, and production-ready patterns rather than over-engineering.
 
-### Outputs
-- VPC ID
-- Public subnet IDs (2)
-- Private subnet IDs (2)
+---
 
-## Repository Structure (High Level)
-terraform/
-bootstrap/ # Remote state (S3 + DynamoDB)
-envs/dev/ # Dev environment configuration
-modules/vpc/ # Reusable VPC module
-k8s/ # Kubernetes manifests (planned)
-app/ # Application code (planned)
-python/ # Automation scripts (planned)
-docs/ # Architecture notes and runbooks
+## Architecture
+
+**Core components:**
+
+- **AWS VPC** – Isolated networking with public and private subnets
+- **Amazon EKS** – Managed Kubernetes cluster
+- **Amazon ECR** – Container image registry
+- **GitHub Actions** – CI pipeline for building and pushing images
+- **Argo CD** – GitOps-based continuous deployment
+
+```mermaid
+flowchart LR
+    Dev[Developer]
+    GH[GitHub Repo]
+    GA[GitHub Actions]
+    ECR[Amazon ECR]
+    Argo[Argo CD]
+    EKS[Amazon EKS]
+
+    Dev -->|git push| GH
+    GH -->|trigger| GA
+    GA -->|build & push image| ECR
+    GH -->|GitOps sync| Argo
+    Argo -->|deploy| EKS
 
 
-## Notes
+---
 
-- Infrastructure is created for learning and validation and will be torn down after the project is completed.
-- The project is built incrementally, with each phase committed and documented as it progresses.
+## CI/CD Flow (High Level)
 
+1. Developer pushes code to the `main` branch
+2. GitHub Actions:
+   - Builds the container image
+   - Tags the image with the Git commit SHA
+   - Pushes the image to Amazon ECR using OIDC authentication
+3. Argo CD:
+   - Detects changes from the Git repository
+   - Deploys the updated image to the EKS cluster
+4. Kubernetes rolls out the updated application
+
+This creates a fully automated and auditable deployment pipeline.
+
+---
+
+## Repository Structure
+
+```text
+.
+├── app/hello                 # Containerized demo application
+├── .github/workflows         # GitHub Actions CI pipelines
+├── terraform
+│   ├── modules               # Reusable Terraform modules (VPC, EKS, ECR, IAM)
+│   └── envs/dev               # Environment-specific configuration
+├── k8s
+│   ├── apps                   # Kubernetes manifests (Kustomize)
+│   └── argocd                 # Argo CD application definitions
+├── docs
+│   ├── cicd                   # CI/CD documentation
+│   └── runbooks               # Operational notes and debugging
