@@ -29,6 +29,15 @@ module "ecr_hello" {
   project_name = var.project_name
   repo_name    = "${var.project_name}/hello"
 }
+module "github_actions_oidc" {
+  source = "../../modules/iam_github_oidc_role"
+
+  project_name       = var.project_name
+  github_owner       = "JusticeOkp"
+  github_repo        = "DevOps-Project-Design"
+  allowed_branches   = ["main"]
+  ecr_repository_arn = module.ecr_hello.repository_arn
+}
 
 output "env_name" {
   value = "dev"
@@ -61,3 +70,8 @@ output "hello_ecr_repository_url" {
 output "hello_ecr_repository_arn" {
   value = module.ecr_hello.repository_arn
 }
+
+output "github_actions_role_arn" {
+  value = module.github_actions_oidc.role_arn
+}
+
