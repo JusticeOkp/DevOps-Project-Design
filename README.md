@@ -28,7 +28,7 @@ The focus is on clarity, correctness, and production-ready patterns rather than 
 - **GitHub Actions** – CI pipeline for building and pushing images
 - **Argo CD** – GitOps-based continuous deployment
 
-```mermaid
+
 flowchart LR
     Dev[Developer]
     GH[GitHub Repo]
@@ -36,7 +36,6 @@ flowchart LR
     ECR[Amazon ECR]
     Argo[Argo CD]
     EKS[Amazon EKS]
-
     Dev -->|git push| GH
     GH -->|trigger| GA
     GA -->|build & push image| ECR
