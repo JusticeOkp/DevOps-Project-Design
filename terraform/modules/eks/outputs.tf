@@ -25,3 +25,4 @@ output "oidc_provider_arn" {
 output "oidc_issuer_url" {
   value = aws_iam_openid_connect_provider.this.url
 }
+
